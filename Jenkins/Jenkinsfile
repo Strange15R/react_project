@@ -5,7 +5,7 @@ pipeline {
         stage('🧹 Clean Workspace') {
             steps {
                 echo "📥 Removing old build and dependencies..."
-                sh 'sudo rm -rf react_project/build react_project/node_modules'
+                sh 'rm -rf react_project/build react_project/node_modules'
             }
         }
 
