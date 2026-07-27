@@ -1,51 +1,54 @@
 #!/bin/bash
 
-#  @author ${Nafiur Rashid}
-#  @email ${nafiurrashid@gmail.com}
-#  ${Version: 1.00}
-  
+# Author: Raihanul Islam Bhuiyan 
+# Email: raihandmail@gmail.com
+
 set -e
 
-echo "🔄 Updating package index..."
-sudo apt update
+echo "Updating system"
+apt update
 
-echo "📦 Installing Nginx..."
-sudo apt install -y nginx
 
-echo "⚙️ Enabling Nginx service on boot..."
-sudo systemctl enable nginx
+echo "Installing git & nginx"
+apt install git nginx -y
 
-echo "🚀 Starting Nginx service..."
-sudo systemctl start nginx
 
-echo " Current status of Nginx service..."
-sudo systemctl status nginx --no-pager
+echo "Installing & updating node.js"
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+apt install -y nodejs
 
-echo "✅ Nginx is installed and running!"
-echo "🌐 Visit: http://localhost or http://<your-server-ip>"
 
-echo "📦 Installing npm..."
-sudo apt install npm -y
+echo "Openning nginx directory"
+cd /var/www
 
-echo "📦 Cloning this repo..."
-git clone https://github.com/nafiurrashid/react_project.git
+
+echo "Cloning the project repository"
+rm -rf /var/www/react_project
+git clone https://github.com/Strange15R/react_project.git
+
+
+echo "Openning the project directory"
 cd react_project
-
-echo "📦 creating build file.."
-npm install
-npm run build
-
-echo "📦 moving the buildfile.."
-sudo rm -rf /var/www/html/*
-sudo cp -r build/* /var/www/html/
-chmod +x *
-
-echo "🔄 Relaod & restart Nginx..."
-sudo systemctl reload nginx
-sudo systemctl restart nginx
+rm -rf node_modules
 
 
+echo "Installing dependencies"
+npm ci
 
 
+echo "Building the app"
+DISABLE_ESLINT_PLUGIN=true npm run build
 
+
+echo "Move the  build to nginx directory to connect to the web"
+rm -rf /var/www/html/*
+mv build/* /var/www/html/
+
+
+echo "Restart nginx"
+systemctl restart nginx
+
+
+echo "Deployment done"
+echo "Visit to https://<user_IP>"
 
