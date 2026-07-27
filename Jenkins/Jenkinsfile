@@ -2,55 +2,56 @@ pipeline {
     agent any
 
     stages {
-        stage('🧹 Clean Workspace') {
+
+        stage('Clean Old Repository') {
             steps {
-                echo "📥 Removing old build and dependencies..."
+                echo "Cleaning previous version of the repository"
                 sh 'rm -rf react_project/build react_project/node_modules'
             }
         }
 
-        stage('📥 Clone Repository') {
+        stage('Clone Repository') {
             steps {
-                echo "📂 Cloning the master branch from GitHub..."
-                git branch: 'master', url: 'https://github.com/nafiurrashid/react_project.git'
+                echo "Cloning the repository"
+                dir('react_project') {
+                    git branch: 'master', url: 'https://github.com/Strange15R/react_project.git'
+                    sh 'pwd'
+                }
             }
         }
 
-        stage('📂 List Project Files') {
+        stage('Install dependencies & Build Application') {
             steps {
-                echo "🗂 Checking files in react_project directory..."
-                sh 'ls -lah'
-                sh 'pwd'
+                echo 'Building the project'
+               dir('react_project') {
+                    sh '''
+                    npm ci
+                    DISABLE_ESLINT_PLUGIN=true npm run build
+                    ls -ltr
+                    '''
+               }
             }
         }
 
-        stage('⚙️ Install & Build Project') {
+        stage('Deploy Build') {
             steps {
-                echo "💻 Installing dependencies and building the project..."
-                sh 'npm install'
-                sh 'npm run build'
-                sh 'ls -lia'
-            }
-        }
-
-        stage('📦 Deploy Build to Nginx') {
-            steps {
-                echo "🧹 Cleaning /var/www/html and moving new build files..."
+                echo "Cleaning & replacing previous build"
                 sh '''
-                    sudo rm -rf /var/www/html/*
-                    sudo mv build/* /var/www/html
-                    ls -lah /var/www/html/
+                pwd
+                ls -la react_project/build
+                rm -rf /var/www/html/*
+                mv react_project/build/* /var/www/html/
+                ls -lah /var/www/html/
                 '''
+                
             }
         }
 
-        stage('🔄 Reload & Restart Nginx') {
+        stage('Restart Nginx') {
             steps {
-                echo "♻️ Reloading and restarting Nginx server..."
-                sh '''
-                    sudo systemctl reload nginx
-                    sudo systemctl restart nginx
-                '''
+                echo "Restarting Nginx"
+                sh 'sudo systemctl restart nginx'
+                
             }
         }
     }
