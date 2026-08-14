@@ -7,13 +7,21 @@ pipeline {
 
         stage('Build Image') {
             steps {
-                sh 'docker build -t strange15r/react-app:latest .'
+                sh '''
+                    docker build \
+                        -t strange15r/react-app:$BUILD_NUMBER \
+                        -t strange15r/react-app:latest \
+                        .
+                '''
             }
         }
 
         stage('Push Image') {
             steps {
-                sh 'docker push strange15r/react-app:latest'
+                sh '''
+                    docker push strange15r/react-app:$BUILD_NUMBER
+                    docker push strange15r/react-app:latest
+                '''
             }
         }
     }
