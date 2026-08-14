@@ -20,7 +20,7 @@
          <ReturnProductModal />
        </div>
        <div>
-         ©2027 Raihan || raihandmail@gmail.com || All rights reserved change2
+         ©2027 Raihan || raihandmail@gmail.com || All rights reserved change3
        </div>
      </div>
    );
