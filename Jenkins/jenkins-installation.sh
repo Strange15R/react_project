@@ -1,4 +1,5 @@
 #This script installs and runs jenkins from an ec2 server
+#Before executing the file give execution permission by 'chmod +x jenkins-installation.sh'
 #Md. Raihanul Islam Bhuiyan
 
 #!/bin/bash
