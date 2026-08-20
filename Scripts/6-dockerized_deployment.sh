@@ -1,0 +1,36 @@
+# This script builds an image from Dockerfile instruction then uses that to deploy the applicattio in a container.
+
+#!/bin/bash
+
+
+
+#Clonning the project
+git clone https://github.com/nafiurrashid/react_project.git
+
+#Change branch
+cd react_project
+git checkout dockerized_app
+
+#Check
+cd react_project
+ls -lia
+
+#Remove similar named images
+docker rmi react-app:local
+
+#Build new image
+docker build -t react-app:local .
+
+#Check
+docker images
+docker ps -a
+
+#Remove old containers
+docker rm react-app
+
+#Build new container
+docker run -d --name react-app -p 90:3000 react-app:local
+
+#Check
+docker ps -a
+
