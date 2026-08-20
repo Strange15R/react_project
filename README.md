@@ -1,23 +1,26 @@
-# Project preview:
+## Project preview:
 
-- LTE: https://thunderous-selkie-bc1788.netlify.app/
-- Latest MasterBaranch Deployment: https://react-project-git-master-nafiurrashids-projects.vercel.app
+ For a live, hosted version of the application: 
+ https://thunderous-selkie-bc1788.netlify.app/
+
 
 ### Quick deployment for ubuntu 
 #### Development Server
 ```
-wget https://raw.githubusercontent.com/nafiurrashid/react_project/refs/heads/master/Installation_script.sh
+wget -O Installation_script.sh https://raw.githubusercontent.com/Strange15R/react_project/main/Scripts/1-first_setup.sh
 chmod +x Installation_script.sh
 ./Installation_script.sh
 ```
 #### Production Server
 ```
-wget https://raw.githubusercontent.com/nafiurrashid/react_project/refs/heads/master/RunReact_withnginx_onUbuntu.sh
-chmod +x RunReact_withnginx_onUbuntu.sh
-./RunReact_withnginx_onUbuntu.sh
+wget -O Redeployment.sh https://raw.githubusercontent.com/Strange15R/react_project/master/Scripts/2-redeployment.sh
+chmod +x Redeployment.sh
+./Redeployment.sh
 ```
+### Getting Started with Deployment of the React App
 
-### Resoures I have used:
+
+### Resources used in the original project:
 
 1.  Material UI https://mui.com/
 2.  React-select: https://react-select.com/home
@@ -27,23 +30,3 @@ chmod +x RunReact_withnginx_onUbuntu.sh
 6.  Loglevel: https://www.npmjs.com/package/loglevel
 7.  React Testing Library: https://testing-library.com/docs/react-testing-library/intro/
 8.  Jest: https://jestjs.io/docs/tutorial-react
-
-### Getting Started with Create React App
-
-#### Available Scripts
-
-In the project directory, you can run:
-
-##### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-##### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-
-##### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
