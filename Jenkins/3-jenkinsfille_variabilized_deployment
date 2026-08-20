@@ -1,0 +1,67 @@
+pipeline {
+    agent {
+        label 'dev'
+    }
+
+    environment {
+        REPO_URL = 'https://github.com/Strange15R/react_project.git'
+        BRANCH = 'master'
+        PROJECT_DIR = 'react_project'
+        NGINX_ROOT = '/var/www/html'
+    }
+
+    stages {
+
+        stage('Clean Old Repository') {
+            steps {
+                echo "Cleaning previous version of the repository"
+                sh '''
+                rm -rf ${PROJECT_DIR}/build ${PROJECT_DIR}/node_modules
+                '''
+            }
+        }
+
+        stage('Clone Repository') {
+            steps {
+                echo "Cloning the repository"
+                dir("${PROJECT_DIR}") {
+                    git branch: "${BRANCH}", url: "${REPO_URL}"
+                    sh 'pwd'
+                }
+            }
+        }
+
+        stage('Install dependencies & Build Application') {
+            steps {
+                echo "Building the project"
+                dir("${PROJECT_DIR}") {
+                    sh '''
+                    npm ci
+                    DISABLE_ESLINT_PLUGIN=true npm run build
+                    ls -ltr
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy Build') {
+            steps {
+                echo "Cleaning & replacing previous build"
+                sh '''
+                pwd
+                ls -la ${PROJECT_DIR}/build
+                rm -rf ${NGINX_ROOT}/*
+                mv ${PROJECT_DIR}/build/* ${NGINX_ROOT}/
+                ls -lah ${NGINX_ROOT}/
+                '''
+            }
+        }
+
+        stage('Restart Nginx') {
+            steps {
+                echo "Restarting Nginx"
+                sh 'sudo systemctl restart nginx'
+            }
+        }
+    }
+}
