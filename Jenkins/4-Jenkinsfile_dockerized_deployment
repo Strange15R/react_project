@@ -1,0 +1,80 @@
+pipeline {
+
+    agent {
+        label 'dev'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'dockerized_app',
+                    url: 'https://github.com/nafiurrashid/react_project.git'
+            }
+        }
+
+        stage('Check Project') {
+            steps {
+                sh '''
+                    echo "Current directory:"
+                    pwd
+
+                    echo "Project files:"
+                    ls -lia
+                '''
+            }
+        }
+
+        stage('Remove Old Container') {
+            steps {
+                sh '''
+                    if docker container inspect react-app > /dev/null 2>&1; then
+                        docker rm -f react-app
+                    else
+                        echo "Container react-app does not exist"
+                    fi
+                '''
+            }
+        }
+
+        stage('Remove Old Image') {
+            steps {
+                sh '''
+                    if docker image inspect react-app:local > /dev/null 2>&1; then
+                        docker rmi react-app:local
+                    else
+                        echo "Image react-app:local does not exist"
+                    fi
+                '''
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                    docker build -t react-app:local .
+                '''
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                sh '''
+                    docker run -d --name react-app -p 90:3000 react-app:local
+                '''
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                sh '''
+                    echo "Docker images:"
+                    docker images
+
+                    echo "Running containers:"
+                    docker ps -a
+                '''
+            }
+        }
+    }
+}
