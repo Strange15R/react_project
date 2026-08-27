@@ -24,7 +24,7 @@ git clone https://github.com/Strange15R/react_project.git
 
 echo "Installing dependencies"
 cd react_project
-npm ci
+npm install
 
 
 echo "Building the application"
