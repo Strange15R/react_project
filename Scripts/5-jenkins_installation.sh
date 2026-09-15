@@ -41,4 +41,4 @@ echo "Initial admin password:"
 echo "sudo cat /var/lib/jenkins/secrets/initialAdminPassword"
 
 echo "Open:"
-echo "http://15.207.45.22:8080/"
+echo "http://<localhost>:8080/"
